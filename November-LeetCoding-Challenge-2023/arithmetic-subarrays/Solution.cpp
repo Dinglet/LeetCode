@@ -1,5 +1,6 @@
 #include <vector>
 #include <algorithm>
+#include <algorithm>
 
 using namespace std;
 
@@ -13,17 +14,39 @@ public:
 
         for (int i = 0; i < l.size(); i++)
         {
-            vector<int> subarray(nums.begin() + l[i], nums.begin() + (r[i] + 1));
-            sort(subarray.begin(), subarray.end());
-            int difference = subarray[1] - subarray[0];
-            bool isArithmetic = true;
-            for (int j = 2; j < subarray.size(); j++)
+            int maxElement = *max_element(nums.begin() + l[i], nums.begin() + (r[i] + 1));
+            int minElement = *min_element(nums.begin() + l[i], nums.begin() + (r[i] + 1));
+            int nElements = r[i] - l[i] + 1;
+
+            if (maxElement == minElement)
             {
-                if (subarray[j] - subarray[j - 1] != difference)
+                result.push_back(true);
+                continue;
+            }
+            if ((maxElement - minElement) % (nElements - 1) != 0)
+            {
+                result.push_back(false);
+                continue;
+            }
+            int difference = (maxElement - minElement) / (nElements - 1);
+
+            // check apperance of minElement + appears[i] * difference
+            vector<bool> appears(nElements, false);
+            bool isArithmetic = true;
+            for (int j = l[i]; j <= r[i]; j++)
+            {
+                if ((nums[j] - minElement) % difference != 0)
                 {
                     isArithmetic = false;
                     break;
                 }
+                int index = (nums[j] - minElement) / difference;
+                if (appears[index])
+                {
+                    isArithmetic = false;
+                    break;
+                }
+                appears[index] = true;
             }
             result.push_back(isArithmetic);
         }
