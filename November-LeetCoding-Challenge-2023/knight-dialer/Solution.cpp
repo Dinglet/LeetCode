@@ -22,20 +22,24 @@ public:
         // 7: 2, 6
         // 8: 1, 3
         // 9: 2, 4
-        vector<vector<int>> moves = {{4, 6}, {6, 8}, {7, 9}, {4, 8}, {0, 3, 9}, {}, {0, 1, 7}, {2, 6}, {1, 3}, {2, 4}};
-
+        
         uint64_t dp[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         for (int i = 1; i < n; i++)
         {
-            uint64_t next[10] = {0};
-            for (int j = 0; j < 10; j++)
+            uint64_t next[10] =
             {
-                for (int k = 0; k < moves[j].size(); k++)
-                {
-                    next[moves[j][k]] += dp[j];
-                    next[moves[j][k]] %= MOD;
-                }
-            }
+                (dp[4] + dp[6]) % MOD,
+                (dp[6] + dp[8]) % MOD,
+                (dp[7] + dp[9]) % MOD,
+                (dp[4] + dp[8]) % MOD,
+                (dp[0] + dp[3] + dp[9]) % MOD,
+                0,
+                (dp[0] + dp[1] + dp[7]) % MOD,
+                (dp[2] + dp[6]) % MOD,
+                (dp[1] + dp[3]) % MOD,
+                (dp[2] + dp[4]) % MOD
+            };
+
             memcpy(dp, next, sizeof(dp));
         }
 
