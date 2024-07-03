@@ -16,24 +16,74 @@ public:
     {
         if (nums.size() <= 4)
         {
-            printf("n <= 4, trivial case\n");
+            // printf("n <= 4, trivial case\n");
             return 0;
         }
 
-        sort(nums.begin(), nums.end());
+        vector<int> mins = {kMax, kMax, kMax, kMax}; // 4 smallest elements
+        vector<int> maxs = {kMin, kMin, kMin, kMin}; // 4 largest elements
+
         for (int n : nums)
-            printf("%d ", n);
-        printf("\n");
-
-        int minDiff = nums[nums.size()-4] - nums[0];
-        printf("%d = %d - %d\n", nums[nums.size()-4] - nums[0], nums[nums.size()-4], nums[0]);
-
-        for (int i = 1; i < 4; i++)
         {
-            minDiff = min(minDiff, nums[nums.size()-4+i] - nums[i]);
-            printf("%d = %d - %d\n", nums[nums.size()-4+i] - nums[i], nums[nums.size()-4+i], nums[i]);
+            if (n < mins[0])
+            {
+                mins[3] = mins[2];
+                mins[2] = mins[1];
+                mins[1] = mins[0];
+                mins[0] = n;
+            }
+            else if (n < mins[1])
+            {
+                mins[3] = mins[2];
+                mins[2] = mins[1];
+                mins[1] = n;
+            }
+            else if (n < mins[2])
+            {
+                mins[3] = mins[2];
+                mins[2] = n;
+            }
+            else if (n < mins[3])
+            {
+                mins[3] = n;
+            }
+
+            if (n > maxs[3])
+            {
+                maxs[0] = maxs[1];
+                maxs[1] = maxs[2];
+                maxs[2] = maxs[3];
+                maxs[3] = n;
+            }
+            else if (n > maxs[2])
+            {
+                maxs[0] = maxs[1];
+                maxs[1] = maxs[2];
+                maxs[2] = n;
+            }
+            else if (n > maxs[1])
+            {
+                maxs[0] = maxs[1];
+                maxs[1] = n;
+            }
+            else if (n > maxs[0])
+            {
+                maxs[0] = n;
+            }
         }
 
-        return minDiff;
+        // printf("mins: %d %d %d %d\n", mins[0], mins[1], mins[2], mins[3]);
+        // printf("maxs: %d %d %d %d\n", maxs[0], maxs[1], maxs[2], maxs[3]);
+
+        int result = maxs[0] - mins[0];
+        for (int i = 1; i < 4; i++)
+        {
+            result = min(result, maxs[i] - mins[i]);
+        }
+
+        return result;
     }
+private:
+    const int kMin = -1e9;
+    const int kMax = 1e9;
 };
