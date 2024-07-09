@@ -10,32 +10,29 @@ public:
     // Assumed FCFS
     double averageWaitingTime(vector<vector<int>>& customers)
     {
-        int lastFinishedTime = 0;
-        for (auto &pair : customers)
-        {
-            auto arrival = pair[0];
-            auto time = pair[1];
-
-            // if the chef is free when the customer arrives
-            if (arrival >= lastFinishedTime)
-            {
-                lastFinishedTime = arrival + time;
-            }
-            else
-            {
-                pair[1] += lastFinishedTime - arrival; // add the time the chef was busy
-                lastFinishedTime += time;
-            }
-        }
-
         if (customers.size() == 0)
             return 0;
 
         double sum = 0;
-        for (auto &pair : customers)
+        int lastFinishedTime = 0;
+        for (const auto &pair : customers)
         {
-            sum += pair[1];
+            const auto &arrival = pair[0];
+            const auto &time = pair[1];
+
+            // if the chef is free when the customer arrives
+            if (arrival >= lastFinishedTime)
+            {
+                sum += time; // add the time needed to prepare the order
+                lastFinishedTime = arrival + time;
+            }
+            else
+            {
+                sum += lastFinishedTime - arrival + time; // add the cook busy time + the time needed to prepare the order
+                lastFinishedTime += time;
+            }
         }
+
         return sum / customers.size();
     }
 };
