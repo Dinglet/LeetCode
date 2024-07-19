@@ -1,5 +1,6 @@
 #include <vector>
 #include <climits>
+#include <algorithm>
 
 using namespace std;
 
@@ -23,16 +24,9 @@ public:
             }
         }
 
-        for (int iRow = 0; iRow < matrix.size(); ++iRow)
-        {
-            for (int iCol = 0; iCol < matrix[iRow].size(); ++iCol)
-            {
-                if (matrix[iRow][iCol] == minsInRows[iRow] && matrix[iRow][iCol] == maxsInCols[iCol])
-                {
-                    result.push_back(matrix[iRow][iCol]);
-                }
-            }
-        }
+        sort(minsInRows.begin(), minsInRows.end());
+        sort(maxsInCols.begin(), maxsInCols.end());
+        set_intersection(minsInRows.begin(), minsInRows.end(), maxsInCols.begin(), maxsInCols.end(), back_inserter(result));
 
         return result;
     }
