@@ -6,10 +6,6 @@
 
 using namespace std;
 
-extern void printFirst();
-extern void printSecond();
-extern void printThird();
-
 class Foo {
     binary_semaphore first_done{0};
     binary_semaphore second_done{0};
