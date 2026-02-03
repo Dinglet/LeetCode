@@ -22,7 +22,7 @@ public:
         hydrogen_counter_ += 1;
         if (hydrogen_counter_ >= 2 && oxygen_counter_ >= 1)
         {
-            // release signals for enough molecules
+            // release signals for enough atoms
             hydrogen_queue_.release(2);
             hydrogen_counter_ -= 2;
             oxygen_queue_.release(1);
@@ -35,7 +35,7 @@ public:
             mutex_.release();
         }
 
-        // acquire a signal for enough molecules
+        // acquire a signal for enough atoms
         hydrogen_queue_.acquire();
         releaseHydrogen();
 
@@ -52,6 +52,7 @@ public:
         oxygen_counter_ += 1;
         if (hydrogen_counter_ >= 2 && oxygen_counter_ >= 1)
         {
+            // release signals for enough atoms
             hydrogen_queue_.release(2);
             hydrogen_counter_ -= 2;
             oxygen_queue_.release(1);
@@ -64,7 +65,7 @@ public:
             mutex_.release();
         }
 
-        // wait for the signal of enough molecules
+        // wait for the signal of enough atoms
         oxygen_queue_.acquire();
         releaseOxygen();
 
