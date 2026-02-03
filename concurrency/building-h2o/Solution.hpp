@@ -1,4 +1,9 @@
 // https://leetcode.com/problems/building-h2o/
+//
+// My solution is based on the content of Section 5.6 of The Little Book of Semaphores.
+//
+// I think a more clear solution is the one posted by deirh on LeetCode:
+// <https://leetcode.com/problems/building-h2o/solutions/5463051/2-semaphores-barrier-finally-a-useful-ap-9yep>
 #pragma once
 
 #include <functional>
