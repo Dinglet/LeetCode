@@ -90,6 +90,10 @@ private:
 
     // DO NOT use a complete function to release the mutex here
     // because the complete function runs before all the three threads are unblocked.
-    // In this case, the barrier may not be ready for the next phase.
+    // In this case, the barrier may not be ready for the next phase,
+    // and you will see a data race reported by ThreadSanitizer if you use it.
+    // ```bash
+    // g++ -std=c++20 -fsanitize=thread -g -O1 -o main main.cpp
+    // ``
     barrier<> barrier_{3};
 };
