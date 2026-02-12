@@ -15,37 +15,26 @@ public:
             ++count_letters[c - 'a'];
 
         // the left-to-right and right-to-left checks are inspired by cocktail shaker sort
-        int len = s.size();
-        for (; len > 0;)
+        int tail = 0, head = s.size() - 1;
+        int direction = 1;
+        for (int len = s.size(); len > 0; --len)
         {
-            // check if the substring of length `len` is balanced
-            // from left to right
-            for (int i = 0; i + len < s.size(); ++i)
+            // assertion: abs(head - tail) + 1 == len
+            for (int i = 0; i < s.size() - len; ++i)
             {
                 if (isBalanced(count_letters))
                     return len;
-                --count_letters[s[i] - 'a'];
-                ++count_letters[s[i + len] - 'a'];
+                --count_letters[s[tail] - 'a'];
+                tail += direction;
+                head += direction;
+                ++count_letters[s[head] - 'a'];
             }
             if (isBalanced(count_letters))
                 return len;
-
-            --count_letters[s[s.size() - len--] - 'a'];
-            if (len == 0)
-                break;
-
-            // check if the substring of length `len` is balanced
-            // from right to left
-            for (int i = s.size() - len - 1; i >= 0; --i)
-            {
-                if (isBalanced(count_letters))
-                    return len;
-                ++count_letters[s[i] - 'a'];
-                --count_letters[s[i + len] - 'a'];
-            }
-            if (isBalanced(count_letters))
-                return len;
-            --count_letters[s[--len] - 'a'];
+            --count_letters[s[tail] - 'a'];
+            tail += direction;
+            swap(tail, head);
+            direction = -direction;
         }
         return 0;
     }
