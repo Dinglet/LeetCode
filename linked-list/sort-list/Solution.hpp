@@ -1,4 +1,7 @@
 // https://leetcode.com/problems/sort-list/
+//
+// O(n log n) time and O(1) memory
+// https://leetcode.com/problems/sort-list/solutions/46712/bottom-to-upnot-recurring-with-o1-space-anpva
 
 struct ListNode
 {
@@ -14,25 +17,57 @@ class Solution
 public:
     ListNode *sortList(ListNode *head)
     {
-        auto indirect = &head;
-        while (*indirect)
+        int length = 0;
+        for (auto node = head; node; node = node->next)
+            ++length;
+
+        for (int step = 1; step < length; step <<= 1)
         {
-            auto min_indirect = indirect;
-            for (auto i = &(*min_indirect)->next; *i; i = &((*i)->next))
+            auto indirect = &head;
+            auto next = head;
+            while (next)
             {
-                if ((*i)->val < (*min_indirect)->val)
-                    min_indirect = i;
+                ListNode *first = next;
+                ListNode *second = split(first, step);
+                next = split(second, step);
+                indirect = merge(indirect, first, second);
+                *indirect = next;
             }
-            if (*indirect != *min_indirect)
+        }
+        return head;
+    }
+
+    // step > 0
+    ListNode *split(ListNode *head, int step)
+    {
+        auto indirect = &head;
+        while (step-- && *indirect)
+            indirect = &((*indirect)->next);
+        auto second = *indirect;
+        *indirect = nullptr;
+        return second;
+    }
+
+    ListNode **merge(ListNode **indirect, ListNode *first, ListNode *second)
+    {
+        while (first && second)
+        {
+            if (second->val < first->val)
             {
-                auto node = *indirect;
-                auto min_node = *min_indirect;
-                *min_indirect = min_node->next;
-                *indirect = min_node;
-                min_node->next = node;
+                *indirect = second;
+                second = second->next;
+            }
+            else
+            {
+                *indirect = first;
+                first = first->next;
             }
             indirect = &((*indirect)->next);
         }
-        return head;
+        *indirect = first ? first : second;
+
+        while (*indirect)
+            indirect = &((*indirect)->next);
+        return indirect;
     }
 };
