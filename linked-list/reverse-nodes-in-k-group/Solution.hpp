@@ -32,6 +32,8 @@ public:
 
     ListNode *reverseFirstK(ListNode *head, int k)
     {
+        if (!head || k <= 1)
+            return head;
         ListNode *node = head;
         ListNode *prev_node = nullptr;
         ListNode *next_node = nullptr;
