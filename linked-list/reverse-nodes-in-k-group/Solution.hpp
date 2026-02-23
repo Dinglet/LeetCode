@@ -13,15 +13,17 @@ public:
     ListNode *reverseKGroup(ListNode *head, int k)
     {
         ListNode *new_head = reverseFirstK(head, k);
+        if (new_head == head)
+            return head;
         while (head->next)
         {
             auto indirect = &head->next;
             head = head->next;
             *indirect = reverseFirstK(head, k);
-            if (head == *indirect)
+            if (*indirect == head)
             {
                 // fail to reverse k nodes
-                // because the number remaining nodes < k
+                // because the number of remaining nodes < k
                 break;
             }
         }
