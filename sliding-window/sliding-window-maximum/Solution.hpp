@@ -9,7 +9,7 @@ class Solution
 public:
     vector<int> maxSlidingWindow(vector<int> &nums, int k)
     {
-        return maxSlidingWindowDP(nums, k);
+        return maxSlidingWindowDeque(nums, k);
     }
 
     vector<int> maxSlidingWindowHeap(vector<int> &nums, int k)
@@ -52,6 +52,37 @@ public:
         {
             output.push_back(max(right_max[i], left_max[i + k - 1]));
         }
+        return output;
+    }
+
+    vector<int> maxSlidingWindowDeque(vector<int> &nums, int k)
+    {
+        const int n = nums.size();
+        deque<int> candidate_indices;
+        vector<int> output(n - k + 1);
+
+        for (int right = 0, left = 0; right < n; ++right)
+        {
+            // the current window is [left, right]
+            // remove the elements smaller than the current one
+            while (!candidate_indices.empty() && nums[candidate_indices.back()] < nums[right])
+                candidate_indices.pop_back();
+            // candidate for the maximum element in the sliding window
+            candidate_indices.push_back(right);
+
+            // remove the element out of the current window
+            if (left > candidate_indices.front())
+                candidate_indices.pop_front();
+
+            // if the length of the current window reaches k
+            if (right + 1 >= k)
+            {
+                // add the maximum element to the output
+                output[left++] = nums[candidate_indices.front()];
+            }
+
+        }
+
         return output;
     }
 };
