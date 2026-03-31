@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <stack>
 
 using namespace std;
 
@@ -39,5 +40,36 @@ private:
             s[i] = c;
             dfs(digits, s, i + 1, combinations);
         }
+    }
+
+    vector<string> letterCombinationsNonRecursive(string digits)
+    {
+        if (digits.size() == 0)
+            return {};
+
+        vector<string> combinations;
+        string str(digits.size(), 0);
+        stack<int> selected_letters;
+
+        do {
+            for (auto i_digit = selected_letters.size(); i_digit < digits.size(); ++i_digit) {
+                str[i_digit] = digit_map_.at(digits[i_digit])[0];
+                selected_letters.push(0);
+            }
+            combinations.push_back(str);
+
+            do {
+                const auto i_letter = selected_letters.top() + 1;
+                selected_letters.pop();
+                const auto i_digit = selected_letters.size();
+                if (i_letter < digit_map_.at(digits[i_digit]).size()) {
+                    str[i_digit] = digit_map_.at(digits[i_digit])[i_letter];
+                    selected_letters.push(i_letter);
+                    break;
+                }
+            } while (!selected_letters.empty());
+        } while (!selected_letters.empty());
+
+        return combinations;
     }
 };
